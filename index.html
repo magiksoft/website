@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magiksoft | Custom Software Architecture & AI Applications</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#00c8ff',
+                            600: '#0ea5e9',
+                            900: '#0c4a6e',
+                            violet: '#6d28d9',
+                            accent: '#00c8ff',
+                            gold: '#f5a623',
+                            'gold-dark': '#e5a93c'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Font & FontAwesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B132B;
+            color: #f1f5f9;
+        }
+
+        .glass-panel {
+            background: #17233D;
+            border: 1px solid #1e293b;
+        }
+
+        .glass-panel-hover:hover {
+            border-color: #38bdf8;
+        }
+
+        .gradient-text {
+            color: #38bdf8;
+        }
+
+        .gradient-border {
+            border: 1px solid #1e293b;
+            border-radius: 0.375rem;
+            padding: 0;
+        }
+
+        .pulse-glow {
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B132B;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 2px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00c8ff;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Header / Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-slate-800 transition-all duration-300" id="mainHeader">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center group h-full py-1">
+                <img src="assets/logo.png" alt="Magiksoft" class="h-full w-auto group-hover:opacity-90 transition-opacity duration-300">
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#services" class="hover:text-brand-400 transition-colors" data-i18n="navServices">Services</a>
+                <a href="#approach" class="hover:text-brand-400 transition-colors" data-i18n="navApproach">Approach</a>
+                <a href="#estimator" class="hover:text-brand-400 transition-colors" data-i18n="navEstimator">Scope Calculator</a>
+                <a href="#contact" class="hover:text-brand-400 transition-colors" data-i18n="navContact">Contact</a>
+            </nav>
+
+            <!-- Actions Right -->
+            <div class="flex items-center gap-4">
+                <!-- Language Switcher Toggle -->
+                <div class="flex items-center bg-slate-900 border border-slate-700 rounded-lg p-1 text-xs font-semibold">
+                    <button id="langEN" onclick="setLanguage('en')" class="px-2.5 py-1 rounded transition-all bg-brand-gold text-slate-950 font-bold">EN</button>
+                    <button id="langSK" onclick="setLanguage('sk')" class="px-2.5 py-1 rounded transition-all text-slate-400 hover:text-white">SK</button>
+                </div>
+
+                <!-- Primary CTA -->
+                <a href="#contact" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold tracking-wide text-slate-950 bg-brand-gold hover:bg-brand-gold-dark rounded-lg  transition-all" data-i18n="navCta">
+                    <i class="fa-solid me-1 fa-paper-plane"></i> Let's Talk
+                </a>
+
+                <!-- Mobile Menu Toggle Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-400 hover:text-white text-xl">
+                    <i class="fa-solid fa-bars" id="menuIcon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-b border-slate-800 bg-slate-950 px-6 py-6 flex flex-col gap-4 text-slate-300">
+            <a href="#services" onclick="toggleMobileMenu()" class="hover:text-brand-400 text-base" data-i18n="navServices">Services</a>
+            <a href="#approach" onclick="toggleMobileMenu()" class="hover:text-brand-400 text-base" data-i18n="navApproach">Approach</a>
+            <a href="#estimator" onclick="toggleMobileMenu()" class="hover:text-brand-400 text-base" data-i18n="navEstimator">Scope Calculator</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="hover:text-brand-400 text-base" data-i18n="navContact">Contact</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="mt-2 text-center py-2.5 text-sm font-bold text-slate-950 bg-brand-gold rounded-lg" data-i18n="navCta">Let's Talk</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-36 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl">
+                <!-- Location & Experience Badge -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-sm bg-slate-900 border border-slate-700 text-xs font-medium text-slate-300 mb-8 ">
+                    <span class="flex h-2 w-2 relative">
+                        <span class="relative inline-flex rounded-sm h-2 w-2 bg-brand-400"></span>
+                    </span>
+                    <span data-i18n="heroBadge">15+ Years Experience • Based in Slovakia (Europe) • Remote Worldwide</span>
+                </div>
+
+                <!-- Main Heading -->
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15] mb-6">
+                    <span data-i18n="heroTitle1">Custom Software Solutions.</span><br>
+                    <span class="gradient-text" data-i18n="heroTitle2">Fast, Pragmatic, Proven.</span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-lg sm:text-xl text-slate-300 leading-relaxed mb-10" data-i18n="heroSubtitle">
+                    Architecting tailor-made applications, fast working DEMOs, and intelligent AI tools for small businesses & individuals. Built for performance, tailored to your real workflow, and grounded in over a decade of hands-on expertise.
+                </p>
+
+                <!-- Primary CTAs -->
+                <div class="flex flex-wrap gap-4 items-center">
+                    <a href="#contact" class="px-6 py-3.5 rounded-md bg-brand-gold hover:bg-brand-gold-dark text-slate-950 font-bold text-sm  transition-all flex items-center gap-2">
+                        <span data-i18n="btnDiscuss">Discuss Your Project</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </a>
+                    <a href="#estimator" class="px-6 py-3.5 rounded-md glass-panel hover:bg-slate-800/80 text-slate-200 font-semibold text-sm border border-brand-400 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-calculator text-brand-400"></i>
+                        <span data-i18n="btnEstimate">Calculate Demo Scope</span>
+                    </a>
+                </div>
+
+                <!-- Highlights Row -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-16 pt-8 border-t border-slate-800 text-slate-400">
+                    <div>
+                        <div class="text-2xl font-bold text-white font-mono">15+</div>
+                        <div class="text-xs uppercase tracking-wider text-slate-500 mt-1" data-i18n="statExp">Years Experience</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-white font-mono" data-i18n="statDemoVal">Fast DEMO</div>
+                        <div class="text-xs uppercase tracking-wider text-slate-500 mt-1" data-i18n="statDemoKey">Prototyping</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-white font-mono">AI Native</div>
+                        <div class="text-xs uppercase tracking-wider text-slate-500 mt-1" data-i18n="statAi">Smart Workflows</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-white font-mono">EU Based</div>
+                        <div class="text-xs uppercase tracking-wider text-slate-500 mt-1" data-i18n="statLocation">Slovakia, Europe</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 relative bg-slate-950/60 border-t border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <h2 class="text-xs font-mono uppercase tracking-widest text-brand-400 mb-3" data-i18n="servicesPre">Tailored Capabilities</h2>
+                <h3 class="text-3xl sm:text-4xl font-extrabold text-white" data-i18n="servicesTitle">What Magiksoft Can Build With You</h3>
+                <p class="text-slate-400 mt-4 text-base" data-i18n="servicesDesc">
+                    From initial concept to production-ready software, tailored specifically for small business budgets, ambitious founders, and operational teams.
+                </p>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Service 1: Fast Prototyping -->
+                <div class="glass-panel p-8 rounded-md glass-panel-hover transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-md bg-brand-500/10 border border-brand-500 text-brand-400 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3" data-i18n="s1Title">Fast DEMOs & Prototyping</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s1Desc">
+                            Don't wait months to see your idea in action. I specialize in rapid proof-of-concept creation, building tangible interactive working demos so you can test features and validate business logic early.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-400"></i> <span data-i18n="s1Bullet1">Interactive Working Prototypes</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-400"></i> <span data-i18n="s1Bullet2">Rapid Validation & Feedback Loops</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-brand-400"></i> <span data-i18n="s1Bullet3">Minimal Risk & Faster Time to Market</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service 2: Custom Applications -->
+                <div class="glass-panel p-8 rounded-md glass-panel-hover transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-md bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3" data-i18n="s2Title">Custom Application Development</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s2Desc">
+                            Tailor-made web applications, management portals, and workflow tools designed specifically for small businesses and individuals tired of rigid off-the-shelf software.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-indigo-400"></i> <span data-i18n="s2Bullet1">Bespoke Web & Internal Tools</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-indigo-400"></i> <span data-i18n="s2Bullet2">Scalable & Secure Architecture</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-indigo-400"></i> <span data-i18n="s2Bullet3">Seamless API Integrations</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service 3: AI-Driven Apps -->
+                <div class="glass-panel p-8 rounded-md glass-panel-hover transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3" data-i18n="s3Title">AI-Driven Solutions</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s3Desc">
+                            Empower your operational business with modern AI capabilities: intelligent automated agents, document parsing, custom LLM integration, and smart data processing workflows.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <span data-i18n="s3Bullet1">Custom LLM & RAG Integration</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <span data-i18n="s3Bullet2">Automated Business Pipelines</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-cyan-400"></i> <span data-i18n="s3Bullet3">Smart Assistance & Document AI</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service 4: Requirements & Blueprinting -->
+                <div class="glass-panel p-8 rounded-md glass-panel-hover transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-compass"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3" data-i18n="s4Title">Requirement Gathering & Refinement</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s4Desc">
+                            Have an idea but don't know the exact tech specification? I help bridge business goals with technical clarity, refining fuzzy requirements into structured technical blueprints.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <span data-i18n="s4Bullet1">Discovery Workshops & Specs</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <span data-i18n="s4Bullet2">System Architecture Blueprints</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-amber-400"></i> <span data-i18n="s4Bullet3">Feasibility & Risk Assessment</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service 5: Architecture & Modernization -->
+                <div class="glass-panel p-8 rounded-md glass-panel-hover transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-cubes"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3" data-i18n="s5Title">Software Architecture & Tech Advisory</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s5Desc">
+                            Leveraging 15+ years of software design experience to structure clean, maintainable systems. Ideal for refactoring legacy codebases or choosing the right tech stack from day one.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <span data-i18n="s5Bullet1">Full Stack System Design</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <span data-i18n="s5Bullet2">Performance & Refactoring</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> <span data-i18n="s5Bullet3">Domain-Driven Architecture</span></li>
+                    </ul>
+                </div>
+
+                <!-- Service 6: Long-term Partnership -->
+                <div class="glass-panel p-8 rounded-md glass-panel-hover transition-all duration-300 flex flex-col justify-between border-brand-500">
+                    <div>
+                        <div class="w-12 h-12 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl mb-6">
+                            <i class="fa-solid fa-handshake"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-3" data-i18n="s6Title">Long-Term Technical Partnership</h4>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-6" data-i18n="s6Desc">
+                            More than just a one-time contractor. Magiksoft aims to be your ongoing senior technology advisor and extension of your team as your business grows.
+                        </p>
+                    </div>
+                    <ul class="text-xs text-slate-300 space-y-2 border-t border-slate-800 pt-4">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> <span data-i18n="s6Bullet1">Direct Senior Communication</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> <span data-i18n="s6Bullet2">Continuous Improvements</span></li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-purple-400"></i> <span data-i18n="s6Bullet3">Reliable Technical Guidance</span></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience & Partnership Philosophy -->
+    <section id="approach" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left text content -->
+                <div class="lg:col-span-6 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-sm bg-brand-500/10 text-brand-400 text-xs font-mono uppercase tracking-wider">
+                        <i class="fa-solid fa-award"></i> <span data-i18n="appPre">Proven Track Record</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight" data-i18n="appTitle">
+                        15+ Years of Domain Experience.<br>Zero Fluff. Pure Delivery.
+                    </h2>
+                    <p class="text-slate-300 text-base leading-relaxed" data-i18n="appDesc1">
+                        Over the past decade and a half, I've had the privilege of engineering solutions across diverse domains—from complex data systems and cloud platforms to nimble small-business utilities and cutting-edge AI software.
+                    </p>
+                    <p class="text-slate-400 text-sm leading-relaxed" data-i18n="appDesc2">
+                        Working with Magiksoft means you deal directly with a senior solutions architect. No middle managers, no junior hand-offs, and no wasted communication cycles. Just fast, pragmatic technical execution tailored to your specific goals.
+                    </p>
+
+                    <!-- Feature Pillars -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                        <div class="p-4 rounded-md bg-slate-900 border border-slate-800">
+                            <div class="text-brand-400 font-bold mb-1 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-layer-group"></i> <span data-i18n="pillar1Title">Multi-Domain Expertise</span>
+                            </div>
+                            <div class="text-xs text-slate-400" data-i18n="pillar1Desc">Adapted solutions inspired by best practices across multiple industries.</div>
+                        </div>
+                        <div class="p-4 rounded-md bg-slate-900 border border-slate-800">
+                            <div class="text-brand-400 font-bold mb-1 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-stopwatch"></i> <span data-i18n="pillar2Title">Speed & Precision</span>
+                            </div>
+                            <div class="text-xs text-slate-400" data-i18n="pillar2Desc">Quick turnarounds on initial working prototypes to get real user feedback.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right visual element: 4-step process -->
+                <div class="lg:col-span-6">
+                    <div class="glass-panel p-8 rounded-lg border border-slate-800 relative">
+                        <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2" data-i18n="procTitle">
+                            <i class="fa-solid fa-diagram-project text-brand-400"></i> How We Work Together
+                        </h3>
+
+                        <div class="space-y-6 relative before:absolute before:inset-0 before:left-4 before:w-0.5 before:bg-slate-800">
+                            
+                            <!-- Step 1 -->
+                            <div class="flex gap-4 relative">
+                                <div class="w-8 h-8 rounded-sm bg-slate-900 border border-brand-400 text-brand-400 flex items-center justify-center font-mono font-bold text-xs shrink-0 z-10">1</div>
+                                <div>
+                                    <h4 class="text-white font-bold text-sm" data-i18n="p1Step">Initial Discovery & Requirements</h4>
+                                    <p class="text-xs text-slate-400 mt-1" data-i18n="p1Desc">We jump on a brief call or async exchange to unpack your core needs and business vision.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="flex gap-4 relative">
+                                <div class="w-8 h-8 rounded-sm bg-slate-900 border border-teal-400 text-teal-400 flex items-center justify-center font-mono font-bold text-xs shrink-0 z-10">2</div>
+                                <div>
+                                    <h4 class="text-white font-bold text-sm" data-i18n="p2Step">Rapid Prototype & DEMO Delivery</h4>
+                                    <p class="text-xs text-slate-400 mt-1" data-i18n="p2Desc">I build a working interactive demo rapidly so you can test features before full commitment.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="flex gap-4 relative">
+                                <div class="w-8 h-8 rounded-sm bg-slate-900 border border-indigo-400 text-indigo-400 flex items-center justify-center font-mono font-bold text-xs shrink-0 z-10">3</div>
+                                <div>
+                                    <h4 class="text-white font-bold text-sm" data-i18n="p3Step">Iterative Custom Development</h4>
+                                    <p class="text-xs text-slate-400 mt-1" data-i18n="p3Desc">Refining the application, integrating custom AI or backend tools, and polishing UX.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div class="flex gap-4 relative">
+                                <div class="w-8 h-8 rounded-sm bg-slate-900 border border-purple-400 text-purple-400 flex items-center justify-center font-mono font-bold text-xs shrink-0 z-10">4</div>
+                                <div>
+                                    <h4 class="text-white font-bold text-sm" data-i18n="p4Step">Launch & Ongoing Partnership</h4>
+                                    <p class="text-xs text-slate-400 mt-1" data-i18n="p4Desc">Deployment, reliable maintenance, and continuous feature expansion as your partner.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Estimator Section -->
+    <section id="estimator" class="py-20 bg-slate-950 border-t border-b border-slate-800">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-mono uppercase tracking-widest text-brand-400" data-i18n="calcPre">Interactive Estimator</span>
+                <h2 class="text-3xl font-extrabold text-white mt-2" data-i18n="calcTitle">Prototype & Project Scope Estimator</h2>
+                <p class="text-slate-400 text-sm mt-3" data-i18n="calcDesc">Select your project parameters to get an instant estimated demo delivery timeline.</p>
+            </div>
+
+            <!-- Interactive Widget Card -->
+            <div class="glass-panel p-6 sm:p-10 rounded-lg border border-slate-800 ">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Left: Selectors -->
+                    <div class="space-y-6">
+                        <!-- Select 1: Stage -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2" data-i18n="labelStage">1. Project Goal / Stage</label>
+                            <select id="estStage" onchange="calculateEstimate()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-md p-3 focus:border-brand-400 focus:ring-1 focus:ring-brand-400 outline-none">
+                                <option value="demo" data-i18n="optStage1">Fast Concept DEMO / Proof of Concept</option>
+                                <option value="full" data-i18n="optStage2">Complete Custom Web Application</option>
+                                <option value="ai" data-i18n="optStage3">AI Automation & Custom Bot / Tool</option>
+                                <option value="arch" data-i18n="optStage4">Architecture Audit & Spec Gathering</option>
+                            </select>
+                        </div>
+
+                        <!-- Select 2: Business Type -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2" data-i18n="labelType">2. Business Profile</label>
+                            <select id="estType" onchange="calculateEstimate()" class="w-full bg-slate-900 border border-slate-700 text-white text-sm rounded-md p-3 focus:border-brand-400 focus:ring-1 focus:ring-brand-400 outline-none">
+                                <option value="small" data-i18n="optType1">Small Business / Local Operational Team</option>
+                                <option value="solo" data-i18n="optType2">Individual Entrepreneur / Solo Founder</option>
+                                <option value="growing" data-i18n="optType3">Growing Startup / Scale-up</option>
+                            </select>
+                        </div>
+
+                        <!-- Select 3: AI Feature Requirement -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2" data-i18n="labelAi">3. Include AI Capabilities?</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button type="button" id="aiBtnYes" onclick="toggleAiNeeded(true)" class="py-2.5 px-4 text-xs font-bold rounded-md border border-brand-400 bg-brand-500/20 text-brand-300 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-check"></i> <span data-i18n="aiYes">Yes, AI Needed</span>
+                                </button>
+                                <button type="button" id="aiBtnNo" onclick="toggleAiNeeded(false)" class="py-2.5 px-4 text-xs font-bold rounded-md border border-slate-700 bg-slate-900 text-slate-400 flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-xmark"></i> <span data-i18n="aiNo">Standard Tech Stack</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Calculated Estimate Display -->
+                    <div class="bg-slate-900 rounded-md p-6 border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <div class="text-xs uppercase font-mono tracking-widest text-slate-500 mb-2" data-i18n="resHeader">Estimated Delivery Window</div>
+                            
+                            <!-- Dynamic Result Text -->
+                            <div class="text-3xl font-extrabold text-brand-400 font-mono mb-2" id="resTimeline">
+                                3 - 5 Working Days
+                            </div>
+                            <div class="text-xs text-slate-400 mb-6" id="resDescription" data-i18n="resDescDefault">
+                                High-velocity initial DEMO build focused on your primary interactive workflow.
+                            </div>
+
+                            <!-- Recommended Approach summary -->
+                            <div class="space-y-3 text-xs border-t border-slate-800 pt-4">
+                                <div class="flex items-center justify-between text-slate-300">
+                                    <span data-i18n="resEngagement">Engagement Style:</span>
+                                    <span class="font-bold text-white" id="resStyle">Direct Senior Collaboration</span>
+                                </div>
+                                <div class="flex items-center justify-between text-slate-300">
+                                    <span data-i18n="resLocation">Location / Timezone:</span>
+                                    <span class="font-bold text-white">Europe (CET) / Remote</span>
+                                </div>
+                                <div class="flex items-center justify-between text-slate-300">
+                                    <span data-i18n="resPrototype">Working DEMO Included:</span>
+                                    <span class="font-bold text-brand-400"><i class="fa-solid fa-check-circle me-1"></i> Yes</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pre-fill Action -->
+                        <div class="mt-6 pt-4 border-t border-slate-800">
+                            <a id="calcCtaBtn" href="#contact" class="w-full py-3 bg-brand-gold hover:bg-brand-gold-dark text-slate-950 font-bold rounded-md text-xs flex items-center justify-center gap-2 transition-all">
+                                <span data-i18n="btnRequestEstimate">Request This Scope Demo</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto">
+                
+                <!-- Contact info side -->
+                <div class="space-y-8">
+                    <div>
+                        <span class="text-xs font-mono uppercase tracking-widest text-brand-400" data-i18n="cntPre">Let's Connect</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2" data-i18n="cntTitle">Ready to Build Your Solution?</h2>
+                        <p class="text-slate-400 text-sm mt-4 leading-relaxed" data-i18n="cntDesc">
+                            Whether you need a quick interactive DEMO, an entire custom application, or an experienced long-term solutions architect for your business, reach out directly.
+                        </p>
+                    </div>
+
+                    <!-- Direct Email Box with Quick Copy -->
+                    <div class="glass-panel p-6 rounded-md border border-brand-500 relative">
+                        <div class="text-xs uppercase font-mono tracking-wider text-slate-400 mb-2" data-i18n="cntDirectLabel">Direct Business Email</div>
+                        <div class="flex items-center justify-between bg-slate-950 px-4 py-3 rounded-md border border-slate-800">
+                            <span class="text-brand-300 font-mono font-bold text-sm sm:text-base select-all">hello@magiksoft.eu</span>
+                            <button onclick="copyEmail()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5" id="copyBtn">
+                                <i class="fa-regular fa-copy"></i>
+                                <span id="copyText" data-i18n="cntCopy">Copy</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Info Badges -->
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-md bg-slate-900 border border-slate-800 flex items-center justify-center text-brand-400 shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-white text-sm" data-i18n="cntLocTitle">Location</div>
+                                <div class="text-xs text-slate-400" data-i18n="cntLocDesc">Slovakia, European Union (Serving clients globally)</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-md bg-slate-900 border border-slate-800 flex items-center justify-center text-brand-400 shrink-0">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-white text-sm" data-i18n="cntRespTitle">Response Time</div>
+                                <div class="text-xs text-slate-400" data-i18n="cntRespDesc">Usually within 24 hours on business days</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-12 text-slate-400 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                
+                <!-- Left: Copyright & Brand -->
+                <div class="flex items-center gap-3">
+                    <div>
+                        <span class="font-bold text-white">Magiksoft, s.r.o.</span> &copy; <span id="yearSpan"></span>. All rights reserved.
+                    </div>
+                </div>
+
+                <!-- Center: Tech Tagline -->
+                <div class="text-slate-500 text-center font-mono" data-i18n="ftrTagline">
+                    Software Architecture • Rapid Prototyping • AI Applications
+                </div>
+
+                <!-- Right: Location & Direct Email -->
+                <div class="flex items-center gap-4 text-slate-400">
+                    <span>Slovakia, EU</span>
+                    <span>•</span>
+                    <a href="mailto:hello@magiksoft.eu" class="text-brand-400 hover:underline">hello@magiksoft.eu</a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set dynamic copyright year
+        document.getElementById('yearSpan').textContent = new Date().getFullYear();
+
+        // Translation Dictionary (English default & Slovak)
+        const i18n = {
+            en: {
+                navServices: "Services",
+                navApproach: "Approach",
+                navEstimator: "Scope Calculator",
+                navContact: "Contact",
+                navCta: "Let's Talk",
+
+                heroBadge: "15+ Years Experience • Based in Slovakia (Europe) • Remote Worldwide",
+                heroTitle1: "Custom Software Solutions.",
+                heroTitle2: "Fast, Pragmatic, Proven.",
+                heroSubtitle: "Architecting tailor-made applications, fast working DEMOs, and intelligent AI tools for small businesses & individuals. Built for performance, tailored to your real workflow, and grounded in over a decade of hands-on expertise.",
+                btnDiscuss: "Discuss Your Project",
+                btnEstimate: "Calculate Demo Scope",
+                statExp: "Years Experience",
+                statDemoVal: "Fast DEMO",
+                statDemoKey: "Prototyping",
+                statAi: "Smart Workflows",
+                statLocation: "Slovakia, Europe",
+
+                servicesPre: "Tailored Capabilities",
+                servicesTitle: "What Magiksoft Can Build With You",
+                servicesDesc: "From initial concept to production-ready software, tailored specifically for small business budgets, ambitious founders, and operational teams.",
+
+                s1Title: "Fast DEMOs & Prototyping",
+                s1Desc: "Don't wait months to see your idea in action. I specialize in rapid proof-of-concept creation, building tangible interactive working demos so you can test features and validate business logic early.",
+                s1Bullet1: "Interactive Working Prototypes",
+                s1Bullet2: "Rapid Validation & Feedback Loops",
+                s1Bullet3: "Minimal Risk & Faster Time to Market",
+
+                s2Title: "Custom Application Development",
+                s2Desc: "Tailor-made web applications, management portals, and workflow tools designed specifically for small businesses and individuals tired of rigid off-the-shelf software.",
+                s2Bullet1: "Bespoke Web & Internal Tools",
+                s2Bullet2: "Scalable & Secure Architecture",
+                s2Bullet3: "Seamless API Integrations",
+
+                s3Title: "AI-Driven Solutions",
+                s3Desc: "Empower your operational business with modern AI capabilities: intelligent automated agents, document parsing, custom LLM integration, and smart data processing workflows.",
+                s3Bullet1: "Custom LLM & RAG Integration",
+                s3Bullet2: "Automated Business Pipelines",
+                s3Bullet3: "Smart Assistance & Document AI",
+
+                s4Title: "Requirement Gathering & Refinement",
+                s4Desc: "Have an idea but don't know the exact tech specification? I help bridge business goals with technical clarity, refining fuzzy requirements into structured technical blueprints.",
+                s4Bullet1: "Discovery Workshops & Specs",
+                s4Bullet2: "System Architecture Blueprints",
+                s4Bullet3: "Feasibility & Risk Assessment",
+
+                s5Title: "Software Architecture & Tech Advisory",
+                s5Desc: "Leveraging 15+ years of software design experience to structure clean, maintainable systems. Ideal for refactoring legacy codebases or choosing the right tech stack from day one.",
+                s5Bullet1: "Full Stack System Design",
+                s5Bullet2: "Performance & Refactoring",
+                s5Bullet3: "Domain-Driven Architecture",
+
+                s6Title: "Long-Term Technical Partnership",
+                s6Desc: "More than just a one-time contractor. Magiksoft aims to be your ongoing senior technology advisor and extension of your team as your business grows.",
+                s6Bullet1: "Direct Senior Communication",
+                s6Bullet2: "Continuous Improvements",
+                s6Bullet3: "Reliable Technical Guidance",
+
+                appPre: "Proven Track Record",
+                appTitle: "15+ Years of Domain Experience.\nZero Fluff. Pure Delivery.",
+                appDesc1: "Over the past decade and a half, I've had the privilege of engineering solutions across diverse domains—from complex data systems and cloud platforms to nimble small-business utilities and cutting-edge AI software.",
+                appDesc2: "Working with Magiksoft means you deal directly with a senior solutions architect. No middle managers, no junior hand-offs, and no wasted communication cycles. Just fast, pragmatic technical execution tailored to your specific goals.",
+                pillar1Title: "Multi-Domain Expertise",
+                pillar1Desc: "Adapted solutions inspired by best practices across multiple industries.",
+                pillar2Title: "Speed & Precision",
+                pillar2Desc: "Quick turnarounds on initial working prototypes to get real user feedback.",
+
+                procTitle: "How We Work Together",
+                p1Step: "Initial Discovery & Requirements",
+                p1Desc: "We jump on a brief call or async exchange to unpack your core needs and business vision.",
+                p2Step: "Rapid Prototype & DEMO Delivery",
+                p2Desc: "I build a working interactive demo rapidly so you can test features before full commitment.",
+                p3Step: "Iterative Custom Development",
+                p3Desc: "Refining the application, integrating custom AI or backend tools, and polishing UX.",
+                p4Step: "Launch & Ongoing Partnership",
+                p4Desc: "Deployment, reliable maintenance, and continuous feature expansion as your partner.",
+
+                calcPre: "Interactive Estimator",
+                calcTitle: "Prototype & Project Scope Estimator",
+                calcDesc: "Select your project parameters to get an instant estimated demo delivery timeline.",
+                labelStage: "1. Project Goal / Stage",
+                optStage1: "Fast Concept DEMO / Proof of Concept",
+                optStage2: "Complete Custom Web Application",
+                optStage3: "AI Automation & Custom Bot / Tool",
+                optStage4: "Architecture Audit & Spec Gathering",
+                labelType: "2. Business Profile",
+                optType1: "Small Business / Local Operational Team",
+                optType2: "Individual Entrepreneur / Solo Founder",
+                optType3: "Growing Startup / Scale-up",
+                labelAi: "3. Include AI Capabilities?",
+                aiYes: "Yes, AI Needed",
+                aiNo: "Standard Tech Stack",
+                resHeader: "Estimated Delivery Window",
+                resDescDefault: "High-velocity initial DEMO build focused on your primary interactive workflow.",
+                resEngagement: "Engagement Style:",
+                resLocation: "Location / Timezone:",
+                resPrototype: "Working DEMO Included:",
+                btnRequestEstimate: "Request This Scope Demo",
+
+                cntPre: "Let's Connect",
+                cntTitle: "Ready to Build Your Solution?",
+                cntDesc: "Whether you need a quick interactive DEMO, an entire custom application, or an experienced long-term solutions architect for your business, reach out directly.",
+                cntDirectLabel: "Direct Business Email",
+                cntCopy: "Copy",
+                cntCopied: "Copied!",
+                cntLocTitle: "Location",
+                cntLocDesc: "Slovakia, European Union (Serving clients globally)",
+                cntRespTitle: "Response Time",
+                cntRespDesc: "Usually within 24 hours on business days",
+
+                ftrTagline: "Software Architecture • Rapid Prototyping • AI Applications"
+            },
+            sk: {
+                navServices: "Služby",
+                navApproach: "Prístup",
+                navEstimator: "Odhad projektu",
+                navContact: "Kontakt",
+                navCta: "Napíšte nám",
+
+                heroBadge: "15+ rokov skúseností • Sídlo na Slovensku (Európa) • Globálna spolupráca",
+                heroTitle1: "Softvérové riešenia na mieru.",
+                heroTitle2: "Rýchle, Pragmatické, Overené.",
+                heroSubtitle: "Návrh a vývoj aplikácií na mieru, rýchlych funkčných DEMO verzií a inteligentných AI nástrojov pre malé firmy a jednotlivcov. Postavené na výkone, prispôsobené vašim reálnym procesom a založené na viac ako desaťročí praxe.",
+                btnDiscuss: "Konzultovať projekt",
+                btnEstimate: "Odhadnúť rozsah projektu",
+                statExp: "Rokov skúseností",
+                statDemoVal: "Rýchle DEMO",
+                statDemoKey: "Prototypovanie",
+                statAi: "Smart procesy",
+                statLocation: "Slovensko, Európa",
+
+                servicesPre: "Riešenia na mieru",
+                servicesTitle: "Čo pre vás Magiksoft dokáže vytvoriť",
+                servicesDesc: "Od prvotného nápadu až po produkčný softvér prispôsobený rozpočtom malých firiem, ambicióznym zakladateľom a firemným procesom.",
+
+                s1Title: "Rýchle DEMO & Prototypovanie",
+                s1Desc: "Nečakajte mesiace, kým uvidíte svoj nápad v akcii. Špecializujem sa na rýchlu tvorbu overení konceptov (Proof of Concept) a interaktívnych funkčných ukážok na včasné testovanie.",
+                s1Bullet1: "Interaktívne funkčné prototypy",
+                s1Bullet2: "Rýchla validácia a spätná väzba",
+                s1Bullet3: "Minimálne riziko a rýchlejší vstup na trh",
+
+                s2Title: "Vývoj aplikácií na mieru",
+                s2Desc: "Webové aplikácie, manažérske portály a pracovné nástroje vytvorené presne podľa potrieb malých firiem a jednotlivcov, ktorým nestačia krabicové riešenia.",
+                s2Bullet1: "Interné nástroje a webové systémy na mieru",
+                s2Bullet2: "Škálovateľná a bezpečná architektúra",
+                s2Bullet3: "Bezproblémové integrácie API",
+
+                s3Title: "AI a inteligentné riešenia",
+                s3Desc: "Využite moderné možnosti umelej inteligencie: inteligentných automatizovaných agentov, spracovanie dokumentov, integráciu LLM modelov a zefektívnenie dátových tokov.",
+                s3Bullet1: "Integrácia vlastných LLM & RAG",
+                s3Bullet2: "Automatizované firemné procesy",
+                s3Bullet3: "Spracovanie dokumentov pomocou AI",
+
+                s4Title: "Zber a spresnenie požiadaviek",
+                s4Desc: "Máte nápad, ale chýba vám presná technická špecifikácia? Pomôžem vám premeniť vaše podnikateľské predstavy na prehľadný technický plán a architektúru.",
+                s4Bullet1: "Workshop a tvorba špecifikácie",
+                s4Bullet2: "Architektonické návrhy systémov",
+                s4Bullet3: "Posúdenie vykonateľnosti a rizík",
+
+                s5Title: "Softvérová architektúra & Poradenstvo",
+                s5Desc: "Využite viac ako 15 rokov skúseností s návrhom softvéru na tvorbu čistých a udržateľných systémov. Ideálne pre refaktoring alebo výber správneho technologického stacku.",
+                s5Bullet1: "Full Stack návrh systémov",
+                s5Bullet2: "Optimalizácia výkonu a refaktoring",
+                s5Bullet3: "Doménovo orientovaná architektúra",
+
+                s6Title: "Dlhodobé technologické partnerstvo",
+                s6Desc: "Viac než len jednorazový dodávateľ. Magiksoft sa stane vaším dlhodobým technologickým partnerom a poradcom pri raste vašej firmy.",
+                s6Bullet1: "Priama komunikácia so senior architektom",
+                s6Bullet2: "Kontinuálne zlepšovanie a vývoj",
+                s6Bullet3: "Spoľahlivé technologické vedenie",
+
+                appPre: "Overené skúsenosti",
+                appTitle: "15+ rokov praxe v rôznych doménach.\nPriamy prístup. Rýchle výsledky.",
+                appDesc1: "Počas uplynulých 15 rokov som navrhoval a vyvíjal riešenia v rôznych oblastiach—od komplexných dátových systémov a cloudových platforiem až po flexibilné aplikácie pre malé firmy a moderné AI nástroje.",
+                appDesc2: "Spolupráca s Magiksoft znamená priamu komunikáciu so senior softvérovým architektom. Bez zbytočných manažérov a bez straty času. Iba rýchla a praktická technická realizácia prispôsobená vašim cieľom.",
+                pillar1Title: "Skúsenosti z rôznych odvetví",
+                pillar1Desc: "Riešenia inšpirované osvedčenými postupmi z mnohých odvetví.",
+                pillar2Title: "Rýchlosť a presnosť",
+                pillar2Desc: "Rýchle doručenie prvých funkčných ukážok pre reálnu spätnú väzbu.",
+
+                procTitle: "Ako prebieha spolupráca",
+                p1Step: "Úvodná konzultácia a požiadavky",
+                p1Desc: "Krátky hovor alebo správa na ujasnenie vašich hlavných potrieb a cieľov.",
+                p2Step: "Rýchle prototypovanie a DEMO",
+                p2Desc: "Rýchlo pripravím funkčnú ukážku, aby ste si aplikáciu vyskúšali ešte pred plným vývojom.",
+                p3Step: "Iteratívny vývoj na mieru",
+                p3Desc: "Ladenie funkcionality, integrácia AI nástrojov alebo backendu a úprava UX.",
+                p4Step: "Spustenie a dlhodobé partnerstvo",
+                p4Desc: "Nasadenie do prevádzky, údržba a ďalší rozvoj aplikácie podľa potreby.",
+
+                calcPre: "Interaktívny odhad",
+                calcTitle: "Odhad rozsahu a prototypu",
+                calcDesc: "Zvoľte parametre vášho projektu pre okamžitý odhad času dodania prvého DEMO.",
+                labelStage: "1. Cieľ / Fáza projektu",
+                optStage1: "Rýchle konceptuálne DEMO / Proof of Concept",
+                optStage2: "Kompletná webová aplikácia na mieru",
+                optStage3: "AI automatizácia a vlastný nástroj",
+                optStage4: "Audit architektúry a zber požiadaviek",
+                labelType: "2. Typ podnikateľa / firmy",
+                optType1: "Malá firma / Lokálny tím",
+                optType2: "Samostatný podnikateľ / Jednotlivec",
+                optType3: "Rastúci startup / Scale-up",
+                labelAi: "3. Požadujete AI funkcie?",
+                aiYes: "Áno, požadujem AI",
+                aiNo: "Štandardný technologický stack",
+                resHeader: "Odhadovaný čas doručenia DEMO",
+                resDescDefault: "Rýchle vypracovanie prvého funkčného DEMO zameraného na hlavný proces.",
+                resEngagement: "Forma spolupráce:",
+                resLocation: "Lokalita / Časové pásmo:",
+                resPrototype: "Funkčné DEMO v cene:",
+                btnRequestEstimate: "Nezáväzne požiadať o DEMO",
+
+                cntPre: "Napíšte mi",
+                cntTitle: "Ste pripravení vytvoriť vaše riešenie?",
+                cntDesc: "Či už potrebujete rýchle interaktívne DEMO, kompletnú aplikáciu na mieru alebo skúseného softvérového architekta pre dlhodobú spoluprácu, kontaktujte ma.",
+                cntDirectLabel: "Priamy firemný email",
+                cntCopy: "Kopírovať",
+                cntCopied: "Skopírované!",
+                cntLocTitle: "Sídlo",
+                cntLocDesc: "Slovensko, Európska únia (Služby pre klientov celosvetovo)",
+                cntRespTitle: "Čas odozvy",
+                cntRespDesc: "Obvykle do 24 hodín počas pracovných dní",
+
+                ftrTagline: "Softvérová architektúra • Rýchle prototypovanie • AI Aplikácie"
+            }
+        };
+
+        let currentLang = 'en';
+        let isAiNeeded = true;
+
+        // Language Switcher Function
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            // Update active toggle state buttons
+            const btnEN = document.getElementById('langEN');
+            const btnSK = document.getElementById('langSK');
+            
+            if (lang === 'en') {
+                btnEN.className = "px-2.5 py-1 rounded transition-all bg-brand-gold text-slate-950 font-bold";
+                btnSK.className = "px-2.5 py-1 rounded transition-all text-slate-400 hover:text-white";
+                document.documentElement.lang = "en";
+            } else {
+                btnSK.className = "px-2.5 py-1 rounded transition-all bg-brand-gold text-slate-950 font-bold";
+                btnEN.className = "px-2.5 py-1 rounded transition-all text-slate-400 hover:text-white";
+                document.documentElement.lang = "sk";
+            }
+
+            // Update DOM text elements
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = i18n[lang][key];
+                    } else {
+                        element.textContent = i18n[lang][key];
+                    }
+                }
+            });
+
+            // Recalculate scope estimator display text in current language
+            calculateEstimate();
+        }
+
+        // Mobile Menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Copy Email to clipboard functionality
+        function copyEmail() {
+            const email = "hello@magiksoft.eu";
+            const tempInput = document.createElement("input");
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            const copyBtn = document.getElementById('copyText');
+            const originalText = i18n[currentLang]['cntCopy'];
+            const copiedText = i18n[currentLang]['cntCopied'];
+
+            copyBtn.textContent = copiedText;
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+            }, 2000);
+        }
+
+        // Toggle AI selector in calculator
+        function toggleAiNeeded(needed) {
+            isAiNeeded = needed;
+            const yesBtn = document.getElementById('aiBtnYes');
+            const noBtn = document.getElementById('aiBtnNo');
+
+            if (needed) {
+                yesBtn.className = "py-2.5 px-4 text-xs font-bold rounded-md border border-brand-400 bg-brand-500/20 text-brand-300 flex items-center justify-center gap-2";
+                noBtn.className = "py-2.5 px-4 text-xs font-bold rounded-md border border-slate-700 bg-slate-900 text-slate-400 flex items-center justify-center gap-2";
+            } else {
+                noBtn.className = "py-2.5 px-4 text-xs font-bold rounded-md border border-brand-400 bg-brand-500/20 text-brand-300 flex items-center justify-center gap-2";
+                yesBtn.className = "py-2.5 px-4 text-xs font-bold rounded-md border border-slate-700 bg-slate-900 text-slate-400 flex items-center justify-center gap-2";
+            }
+            calculateEstimate();
+        }
+
+        // Calculate scope estimate & update UI
+        function calculateEstimate() {
+            const stage = document.getElementById('estStage').value;
+            const timelineElem = document.getElementById('resTimeline');
+            const descElem = document.getElementById('resDescription');
+
+            let daysText = "";
+            let descText = "";
+
+            if (stage === 'demo') {
+                daysText = currentLang === 'en' 
+                    ? (isAiNeeded ? "3 - 5 Days" : "2 - 4 Days") 
+                    : (isAiNeeded ? "3 - 5 dní" : "2 - 4 dni");
+                descText = currentLang === 'en' 
+                    ? "Rapid proof-of-concept DEMO delivered to test key interactive workflows quickly."
+                    : "Rýchle vypracovanie funkčného DEMO zamerané na overenie kľúčových procesov.";
+            } else if (stage === 'full') {
+                daysText = currentLang === 'en'
+                    ? (isAiNeeded ? "10 - 18 Days" : "7 - 14 Days")
+                    : (isAiNeeded ? "10 - 18 dní" : "7 - 14 dní");
+                descText = currentLang === 'en'
+                    ? "Complete custom web application with production-ready architecture and DB design."
+                    : "Kompletná webová aplikácia na mieru s produkčnou architektúrou a databázou.";
+            } else if (stage === 'ai') {
+                daysText = currentLang === 'en' ? "4 - 8 Days" : "4 - 8 dní";
+                descText = currentLang === 'en'
+                    ? "Smart AI agent, automated pipeline, or custom LLM integration tailored to your data."
+                    : "Inteligentný AI agent, automatizovaný proces alebo integrácia LLM podľa vašich potrieb.";
+            } else {
+                daysText = currentLang === 'en' ? "2 - 3 Days" : "2 - 3 dni";
+                descText = currentLang === 'en'
+                    ? "Technical requirement discovery, architecture design document, and roadmap specs."
+                    : "Technická analýza požiadaviek, návrh architektúry a plán realizácie.";
+            }
+
+            timelineElem.textContent = daysText;
+            descElem.textContent = descText;
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('mainHeader');
+            if (window.scrollY > 30) {
+                header.classList.add('py-1');
+            } else {
+                header.classList.remove('py-1');
+            }
+        });
+
+        // Initialize default view
+        calculateEstimate();
+    </script>
+</body>
+</html>
